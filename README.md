@@ -2,7 +2,7 @@ Um Timer Pomodoro simples e eficaz para ajudar você a gerenciar seu tempo e aum
 
 ## O que é o Método Pomodoro?
 
-O Método Pomodoro é uma técnica de gerenciamento de tempo que consiste em dividir o trabalho em intervalos de foco (normalmente 25 minutos), separados por pequenas pausas. Este projeto utiliza tempos personalizados para se adaptar melhor às suas necessidades.
+O Método Pomodoro é uma técnica de gerenciamento de tempo que consiste em dividir o trabalho em intervalos de foco, separados por pequenas pausas. Este projeto utiliza tempos personalizados para se adaptar melhor às suas necessidades.
 
 ## Funcionalidades
 
