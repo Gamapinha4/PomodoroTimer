@@ -1,101 +1,72 @@
-import Image from "next/image";
+'use client'
+import Header from "@/components/Headet";
+import Timer from "@/components/Timer";
+import { Button } from "@/components/ui/button";
+import { BellElectric, Book, Pause, Play } from "lucide-react";
+import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [time, setTime] = useState(99);
+  const [isRunning, setIsRunning] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const enumTimer = {
+    SHORT_WORK: 15 * 60,
+    LONG_WORK: 30 * 60,
+    SHORT_BREAK: 5 * 60,
+    LONG_BREAK: 15 * 60,
+  } as const;
+
+  const getTime = (type: keyof typeof enumTimer) => enumTimer[type];
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setTime((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(interval!);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+    } else if (!isRunning && time !== 0) {
+      clearInterval(interval!);
+    }
+    return () => clearInterval(interval!);
+  }, [isRunning, time]);
+
+  function startTimer() {
+    toast("Timer started !", { icon: '🚀', position: "bottom-center" });
+    setIsRunning(true);
+  }
+
+  function pauseTimer() {
+    toast("Timer paused !", { icon: '⏸️', position: "bottom-center" });
+    setIsRunning(false);
+  }
+
+  return (
+    <div className="">
+      <Header/>
+      <Timer time={time}/>
+
+      <div className="flex justify-center gap-4 mt-8">
+        <Button onClick={startTimer} className="bg-blue-500 hover:bg-blue-400"><Play/> Start</Button>
+        <Button onClick={pauseTimer} variant={'destructive'}><Pause/> Pause</Button>
+      </div>
+      <div className="flex flex-col sm:flex-row items-center justify-center mt-8 gap-4">
+        <div className="flex gap-4">
+          <Button onClick={() => setTime(getTime('SHORT_WORK'))} className="bg-yellow-500 hover:bg-yellow-400"><Book/>Short time</Button>
+          <Button onClick={() => setTime(getTime('LONG_WORK'))} className="bg-red-500 hover:bg-red-400"><Book/>Long time</Button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="flex gap-4">
+          <Button onClick={() => setTime(getTime('SHORT_BREAK'))} className="bg-yellow-500 hover:bg-yellow-400"><BellElectric/> Short break</Button>
+          <Button onClick={() => setTime(getTime('LONG_BREAK'))} className="bg-red-500 hover:bg-red-400"><BellElectric/> Long break</Button>
+        </div>
+      </div>
     </div>
   );
 }
